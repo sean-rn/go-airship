@@ -54,6 +54,7 @@ type AndroidOverrideWithTemplate struct {
 	Sound       string            `json:"sound,omitempty"`
 	CollapseKey string            `json:"collapse_key,omitempty"`
 	Category    string            `json:"category,omitempty"`
+	Title       string            `json:"title,omitempty"`
 }
 
 // IOSOverrideWithTemplate https://docs.airship.com/api/ua/#schemas-iosoverridewithtemplate
@@ -65,11 +66,23 @@ type IOSOverrideWithTemplate struct {
 	Badge      int32             `json:"badge,omitempty"`
 	CollapseID string            `json:"collapse_id,omitempty"`
 	Category   string            `json:"category,omitempty"`
+	Title      string            `json:"title,omitempty"`
 }
 
 // TemplateRef just holds a template ID under a key.
+// One and only one of TemplateID and Fields may be populated
 type TemplateRef struct {
-	TemplateID string `json:"template_id"`
+	TemplateID string          `json:"template_id,omitempty" validate:"excluded_with=Fields"`
+	Fields     *TemplateFields `json:"fields,omitempty" validate:"excluded_with=TemplateID"`
+}
+
+// TemplateFields allows specifying the template directly in the API call. Items in the field object are personalizable with handlebars.
+type TemplateFields struct {
+	Alert     string `json:"alert,omitempty"`
+	Icon      string `json:"icon,omitempty"`
+	IconColor string `json:"icon_color,omitempty"`
+	Summary   string `json:"summary,omitempty"`
+	Title     string `json:"title,omitempty"`
 }
 
 // Actions "Actions": Describes Actions to be performed by the SDK when a user interacts with the notification.
